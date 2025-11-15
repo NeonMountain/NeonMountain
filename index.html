@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dress Size Chart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f6f9;
+      --fg: #212121;
+      --accent: #8b5cf6;
+      --line: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 4rem;
+      gap: 2rem;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 2vw + 1rem, 2.5rem);
+      text-align: center;
+      margin: 0;
+    }
+
+    .layout {
+      width: min(960px, 100%);
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(31, 41, 55, 0.1);
+    }
+
+    thead {
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    th, td {
+      padding: 0.9rem 1.1rem;
+      text-align: left;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      color: rgba(71, 85, 105, 0.9);
+      text-transform: uppercase;
+    }
+
+    tbody tr {
+      transition: background 0.25s ease, transform 0.25s ease;
+      cursor: pointer;
+    }
+
+    tbody tr:hover {
+      background: rgba(139, 92, 246, 0.08);
+      transform: translateX(4px);
+    }
+
+    tbody tr.active {
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    .canvas-card {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 15px 35px rgba(31, 41, 55, 0.1);
+      display: grid;
+      gap: 1rem;
+    }
+
+    .canvas-card h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .canvas-card p {
+      margin: 0;
+      color: rgba(71, 85, 105, 0.85);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    canvas {
+      width: 100%;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      color: rgba(71, 85, 105, 0.9);
+    }
+
+    .legend i {
+      width: 16px;
+      height: 4px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .legend .bust { background: #f97316; }
+    .legend .waist { background: #22d3ee; }
+    .legend .height { background: #34d399; }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 2rem 0.75rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Dress Size Chart</h1>
+  <div class="layout">
+    <table id="size-table">
+      <thead>
+        <tr>
+          <th>Variant</th>
+          <th>Fit</th>
+          <th>Bust (cm)</th>
+          <th>Waist (cm)</th>
+          <th>Height (cm)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="canvas-card">
+      <h2>Measurement Diagram <span id="selected-size"></span></h2>
+      <p>Hover or tap a row in the table to update the lines. The chart scales measurements at 1 cm per pixel, so a 50&nbsp;cm value spans 50&nbsp;px.</p>
+      <div class="legend">
+        <span><i class="bust"></i>Bust</span>
+        <span><i class="waist"></i>Waist</span>
+        <span><i class="height"></i>Height</span>
+      </div>
+      <canvas id="measurement-canvas" width="520" height="220"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const variants = [
+      { size: 'XS', fit: 'Tailored', bust: 78, waist: 62, height: 148 },
+      { size: 'S', fit: 'Classic', bust: 84, waist: 68, height: 152 },
+      { size: 'M', fit: 'Relaxed', bust: 92, waist: 76, height: 158 },
+      { size: 'L', fit: 'Comfort', bust: 100, waist: 84, height: 164 },
+      { size: 'XL', fit: 'Comfort', bust: 108, waist: 94, height: 168 },
+    ];
+
+    const tableBody = document.querySelector('#size-table tbody');
+    const canvas = document.getElementById('measurement-canvas');
+    const ctx = canvas.getContext('2d');
+    const selectedSize = document.getElementById('selected-size');
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      variants.forEach((variant, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${variant.size}</td>
+          <td>${variant.fit}</td>
+          <td>${variant.bust}</td>
+          <td>${variant.waist}</td>
+          <td>${variant.height}</td>
+        `;
+
+        tr.addEventListener('mouseenter', () => drawDiagram(variant, tr));
+        tr.addEventListener('focus', () => drawDiagram(variant, tr));
+        tr.tabIndex = 0;
+
+        if (index === 0) {
+          tr.classList.add('active');
+          drawDiagram(variant, tr);
+        }
+
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function clearActiveRows() {
+      tableBody.querySelectorAll('tr').forEach(row => row.classList.remove('active'));
+    }
+
+    function drawDiagram(variant, row) {
+      const scale = 1; // 50 cm equals 50 pixels -> 1 cm = 1 px
+      clearActiveRows();
+      row?.classList.add('active');
+      selectedSize.textContent = variant ? `· ${variant.size} (${variant.fit})` : '';
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.font = '14px "Inter", sans-serif';
+      ctx.fillStyle = 'rgba(71, 85, 105, 0.85)';
+
+      const startX = 40;
+      const baselineY = 50;
+      const gap = 55;
+
+      const measurements = [
+        { label: 'Bust', value: variant.bust, color: '#f97316', y: baselineY },
+        { label: 'Waist', value: variant.waist, color: '#22d3ee', y: baselineY + gap },
+        { label: 'Height', value: variant.height, color: '#34d399', y: baselineY + gap * 2 }
+      ];
+
+      measurements.forEach(measurement => {
+        const length = measurement.value * scale;
+        const endX = startX + length;
+
+        ctx.strokeStyle = measurement.color;
+        ctx.beginPath();
+        ctx.moveTo(startX, measurement.y);
+        ctx.lineTo(endX, measurement.y);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
+        ctx.fillText(`${measurement.label}: ${measurement.value} cm`, endX + 10, measurement.y + 5);
+
+        ctx.fillStyle = 'rgba(71, 85, 105, 0.55)';
+        ctx.fillRect(startX - 18, measurement.y - 15, 2, 30);
+      });
+
+      drawScale(scale);
+    }
+
+    function drawScale(scale) {
+      const step = 50 * scale; // 50 cm markers
+      const maxWidth = canvas.width - 40;
+      const origin = 40;
+
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([6, 6]);
+
+      ctx.beginPath();
+      ctx.moveTo(origin, 20);
+      ctx.lineTo(origin, canvas.height - 20);
+      ctx.stroke();
+
+      for (let x = origin + step; x <= maxWidth; x += step) {
+        ctx.beginPath();
+        ctx.moveTo(x, 20);
+        ctx.lineTo(x, canvas.height - 20);
+        ctx.stroke();
+        const label = `${(x - origin) / scale} cm`;
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(71, 85, 105, 0.6)';
+        ctx.fillText(label, x - 18, canvas.height - 10);
+        ctx.setLineDash([6, 6]);
+      }
+
+      ctx.setLineDash([]);
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
