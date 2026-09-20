@@ -1,0 +1,165 @@
+<title>Neon Mountain Mandala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Newsreader:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#0B1017; --ground-2:#121A24; --ground-3:#18222E;
+  --ink:#E8EDF2; --ink-2:#9AA8B8; --ink-3:#66788C;
+  --rule:#1E2A38; --rule-strong:#2C3B4C;
+  --glow:#FFB03A; --glow-ink:#FFC163; --glow-soft:rgba(255,176,58,.13); --glow-line:rgba(255,176,58,.34);
+  --ice:#7FB3D5; --ice-soft:rgba(127,179,213,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 32px -12px rgba(0,0,0,.6);
+  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --measure:64ch;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+  --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+  --rule:#DDE4EB; --rule-strong:#C4CFD9;
+  --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.10); --glow-line:rgba(169,98,10,.32);
+  --ice:#2F6E96; --ice-soft:rgba(47,110,150,.08);
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+}}
+:root[data-theme="light"]{
+  --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+  --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+  --rule:#DDE4EB; --rule-strong:#C4CFD9;
+  --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.10); --glow-line:rgba(169,98,10,.32);
+  --ice:#2F6E96; --ice-soft:rgba(47,110,150,.08);
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+p{margin:0}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+.wrap{width:100%;max-width:1180px;margin-inline:auto;padding-inline:24px}
+.col{max-width:var(--measure)}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--glow);margin:0 0 16px}
+.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:24px 20px;border-bottom:1px solid var(--rule)}
+.mark{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:15px}
+.mast-meta{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:right;line-height:1.7}
+.hero{padding-block:clamp(38px,5vw,60px) 0}
+.hero h1{font-size:clamp(30px,5vw,50px);max-width:19ch;margin-bottom:18px}
+.hero .lede{font-size:clamp(17px,1.9vw,20px);color:var(--ink-2);max-width:60ch}
+.sec{padding-block:clamp(40px,5vw,64px)}
+.sec + .sec{border-top:1px solid var(--rule)}
+
+/* ---- MANDALA GRID ---- */
+.scroller{overflow-x:auto;padding-bottom:12px;margin-top:30px;-webkit-overflow-scrolling:touch}
+.grid{min-width:1020px;display:flex;flex-direction:column;gap:3px;background:var(--rule);padding:3px;border-radius:3px}
+.r{display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
+.c{background:var(--ground-2);padding:9px 8px;min-height:74px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border-radius:1px}
+.c span{font-family:var(--f-display);font-weight:600;font-size:10.5px;line-height:1.28;letter-spacing:-.005em;color:var(--ink-2)}
+.c.a span{font-size:10px;color:var(--ink-2)}
+.c.p{background:var(--ice-soft);border:1px solid var(--rule-strong)}
+.c.p span{color:var(--ink);font-weight:800;font-size:11px}
+.c.p.pc{background:var(--ground-3);border-color:var(--rule-strong)}
+.c.goal{background:var(--glow-soft);border:1px solid var(--glow);gap:5px}
+.c.goal span{color:var(--glow-ink);font-weight:800;font-size:10.5px;line-height:1.3}
+.c.goal em{font-family:var(--f-mono);font-style:normal;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--glow)}
+.hint{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);margin-top:14px}
+
+/* ---- PILLAR CARDS ---- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:20px;margin-top:34px}
+.card{background:var(--ground-2);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow);overflow:hidden}
+.card header{padding:20px 24px;background:var(--ground-3);border-bottom:1px solid var(--rule)}
+.num{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--glow);margin-bottom:8px}
+.card h3{font-size:20px}
+.card ol{margin:0;padding:6px 24px 20px;list-style:none;counter-reset:n}
+.card li{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--rule)}
+.card li:last-child{border-bottom:0}
+.card li::before{counter-increment:n;content:counter(n);font-family:var(--f-mono);font-size:11px;color:var(--ink-3);padding-top:4px}
+.card li > div{min-width:0}
+.card strong{font-family:var(--f-display);font-weight:600;font-size:16px;display:block;margin-bottom:3px;letter-spacing:-.01em}
+.card span{font-size:15.5px;color:var(--ink-2);line-height:1.5}
+
+/* ---- MISC ---- */
+.goalbox{background:var(--ground-2);border:1px solid var(--glow-line);border-left:3px solid var(--glow);border-radius:3px;padding:26px 28px;margin-top:28px;max-width:74ch}
+.goalbox .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--glow);margin-bottom:12px}
+.goalbox h2{font-size:clamp(21px,2.6vw,27px);margin-bottom:14px}
+.goalbox p{color:var(--ink-2);font-size:17px}
+.note{background:var(--ice-soft);border:1px dashed var(--rule-strong);border-radius:3px;padding:24px 26px;margin-top:26px}
+.note h3{font-size:18px;margin-bottom:12px}
+.note ul{margin:0;padding-left:19px;color:var(--ink-2);font-size:16.5px;line-height:1.62}
+.note li{margin-bottom:8px}
+.rhythm{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0;margin-top:30px;border-top:1px solid var(--rule)}
+.rhythm div{padding:20px 24px 22px 0;border-bottom:1px solid var(--rule)}
+.rhythm dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--glow);margin-bottom:9px}
+.rhythm dd{margin:0;font-size:16.5px;color:var(--ink-2);line-height:1.52}
+.foot{padding-block:30px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:space-between}
+.foot p{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3)}
+</style>
+
+<header class="wrap">
+  <div class="mast">
+    <span class="mark">
+      <svg width="20" height="20" viewBox="0 0 22 22" aria-hidden="true"><path d="M1 19 L8 5 L12 12 L14.5 8 L21 19 Z" fill="none" stroke="var(--glow)" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      Neon Mountain
+    </span>
+    <span class="mast-meta">Mandala Chart · 9×9<br>Independence Plan · Sep 2026</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">One goal · eight pillars · sixty-four actions</p>
+    <h1>Get out of execution. Build the team. Run the agency.</h1>
+    <p class="lede">You are currently five people at SHE STREET: ads, marketing, art direction, creative execution and eCom management. Neon Mountain cannot grow while one person holds all five. Every action below moves a hat off your head or puts a client in the pipeline — sixty-four of them, each small enough to start this week.</p>
+    <div class="goalbox">
+      <p class="k">Centre cell · the only goal that matters</p>
+      <h2>Out of hands-on execution, with a team that delivers without me, and $50k/month recurring across 6+ clients — by 30 September 2027.</h2>
+      <p>Six retainers at $6–10k/month — SHE STREET can be one of them, at full rate. Your role reduced to three things: strategy, review, and the client-facing call.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">The chart</p>
+    <h2>The 9×9</h2>
+    <div class="scroller">
+      <div class="grid">
+<div class="r"><div class="c a"><span>Paper the SHE STREET case</span></div><div class="c a"><span>Publish Case Study 01</span></div><div class="c a"><span>3 teardowns you don't own</span></div><div class="c a"><span>Cost the tiers for real</span></div><div class="c a"><span>Pick one guarantee</span></div><div class="c a"><span>Access becomes mandatory</span></div><div class="c a"><span>Build 200 qualified accounts</span></div><div class="c a"><span>Warm a separate domain</span></div><div class="c a"><span>4 LinkedIn posts / week</span></div></div><div class="r"><div class="c a"><span>Lock the one-liner</span></div><div class="c p pc"><span>Positioning &amp; Proof</span></div><div class="c a"><span>3 written client quotes</span></div><div class="c a"><span>Templatise the Teardown</span></div><div class="c p pc"><span>Offer &amp; Product</span></div><div class="c a"><span>Build Growth Monitor v1</span></div><div class="c a"><span>5 teardown videos / week</span></div><div class="c p pc"><span>Demand Generation</span></div><div class="c a"><span>Ship the 40-point Audit</span></div></div><div class="r"><div class="c a"><span>Ship “What your AI can't see”</span></div><div class="c a"><span>Real proof or none</span></div><div class="c a"><span>Publish the disqualifiers</span></div><div class="c a"><span>60-day Monitor trial</span></div><div class="c a"><span>Price it once it earns it</span></div><div class="c a"><span>Cap Teardowns per month</span></div><div class="c a"><span>6-email nurture live</span></div><div class="c a"><span>3 videos + 2 carousels / week</span></div><div class="c a"><span>8 weeks before targets</span></div></div><div class="r"><div class="c a"><span>Learn the frame verbatim</span></div><div class="c a"><span>Never quote before diagnosing</span></div><div class="c a"><span>Book call two before hanging up</span></div><div class="c p"><span>Positioning &amp; Proof</span></div><div class="c p"><span>Offer &amp; Product</span></div><div class="c p"><span>Demand Generation</span></div><div class="c a"><span>Standardise the tracking fix</span></div><div class="c a"><span>One reporting template</span></div><div class="c a"><span>SOP each audit pillar</span></div></div><div class="r"><div class="c a"><span>Recap within 2 hours</span></div><div class="c p pc"><span>Sales System</span></div><div class="c a"><span>A CRM with four fields</span></div><div class="c p"><span>Sales System</span></div><div class="c goal"><span>Out of execution · a team that delivers · $50k/mo recurring</span><em>by 30 Sep 2027</em></div><div class="c p"><span>Delivery Engine</span></div><div class="c a"><span>Baselines in writing, week 2</span></div><div class="c p pc"><span>Delivery Engine</span></div><div class="c a"><span>Report day 90 honestly</span></div></div><div class="r"><div class="c a"><span>Hold price, cut scope</span></div><div class="c a"><span>Disqualify out loud</span></div><div class="c a"><span>3–5 calls booked / week</span></div><div class="c p"><span>Team &amp; Handover</span></div><div class="c p"><span>Money &amp; Structure</span></div><div class="c p"><span>Founder &amp; Focus</span></div><div class="c a"><span>Weekly 30-min decision call</span></div><div class="c a"><span>Client keeps everything</span></div><div class="c a"><span>Cap concurrent engagements</span></div></div><div class="r"><div class="c a"><span>List all five hats</span></div><div class="c a"><span>Rank by “who could do this at 80%?”</span></div><div class="c a"><span>Lead designer owns art direction</span></div><div class="c a"><span>Separate entity and books</span></div><div class="c a"><span>SHE STREET pays full rate</span></div><div class="c a"><span>Cost the team before pricing</span></div><div class="c a"><span>Track two weeks of hours</span></div><div class="c a"><span>Set the target split</span></div><div class="c a"><span>3 protected days / week</span></div></div><div class="r"><div class="c a"><span>Creative producer runs execution</span></div><div class="c p pc"><span>Team &amp; Handover</span></div><div class="c a"><span>Media buyer owns the account</span></div><div class="c a"><span>6 months runway first</span></div><div class="c p pc"><span>Money &amp; Structure</span></div><div class="c a"><span>Blended margin, monthly</span></div><div class="c a"><span>Stop executing creative</span></div><div class="c p pc"><span>Founder &amp; Focus</span></div><div class="c a"><span>Art direction = approval</span></div></div><div class="r"><div class="c a"><span>Write the brief template</span></div><div class="c a"><span>One role handed over per quarter</span></div><div class="c a"><span>Your job: strategy, review, the call</span></div><div class="c a"><span>No client over 30%</span></div><div class="c a"><span>Lawyer the contracts</span></div><div class="c a"><span>Set a drawing and hold it</span></div><div class="c a"><span>Say no to everything else</span></div><div class="c a"><span>Weekly: what did I do that they should have?</span></div><div class="c a"><span>Quarterly: kill, don't add</span></div></div>      </div>
+    </div>
+    <p class="hint">Centre block holds the goal and the eight pillars. Each outer block expands one pillar into eight actions. Scroll sideways on a narrow screen — full detail is in the cards below.</p>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">Expanded</p>
+    <h2>Eight pillars, sixty-four actions.</h2>
+    <div class="cards">
+<section class="card"><header><span class="num">Pillar 1</span><h3>Positioning &amp; Proof</h3></header><ol><li><div><strong>Paper the SHE STREET case</strong><span>Signed permission to publish the teardown — even though you own it. Sets the precedent for every client after.</span></div></li><li><div><strong>Publish Case Study 01</strong><span>59% of revenue untagged, $8,715 at 1.72 ROAS identified, the pixel find. Exact numbers, method shown.</span></div></li><li><div><strong>3 teardowns you don't own</strong><span>Owned-brand proof isn't market proof, and buyers know it.</span></div></li><li><div><strong>Lock the one-liner</strong><span>“We build eCommerce growth systems — and we watch them.” Stop rewording it.</span></div></li><li><div><strong>3 written client quotes</strong><span>With permission to publish. Chase them at day 90, not later.</span></div></li><li><div><strong>Ship “What your AI can't see”</strong><span>The bot-traffic find, anonymised. Nobody else can make this piece.</span></div></li><li><div><strong>Real proof or none</strong><span>The sales page ships with verified numbers or that section gets deleted.</span></div></li><li><div><strong>Publish the disqualifiers</strong><span>Who you say no to. Converts better than any testimonial.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 2</span><h3>Offer &amp; Product</h3></header><ol><li><div><strong>Cost the tiers for real</strong><span>Hours × rate against actual delivery — including the team you're about to build.</span></div></li><li><div><strong>Pick one guarantee</strong><span>One risk reversal you can honour, lawyer-reviewed. Not four options.</span></div></li><li><div><strong>Access becomes mandatory</strong><span>Ad account + COGS before a Teardown starts. SHE STREET's was weaker without them.</span></div></li><li><div><strong>Templatise the Teardown</strong><span>Documented end to end so a team member can run it, not just you.</span></div></li><li><div><strong>Build Growth Monitor v1</strong><span>Scheduled diagnostic across Shopify, Klaviyo, Meta.</span></div></li><li><div><strong>60-day Monitor trial</strong><span>Run it on SHE STREET. Log every flag, true and false.</span></div></li><li><div><strong>Price it once it earns it</strong><span>It sells when it catches something you didn't already know. Not before.</span></div></li><li><div><strong>Cap Teardowns per month</strong><span>Set the number now, while saying no is still easy.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 3</span><h3>Demand Generation</h3></header><ol><li><div><strong>Build 200 qualified accounts</strong><span>Meta Ad Library, Shopify directories. Five minutes of real research each.</span></div></li><li><div><strong>Warm a separate domain</strong><span>Before a single send. Never your primary domain.</span></div></li><li><div><strong>4 LinkedIn posts / week</strong><span>From the 30 angles. Diagnose and contrarian first.</span></div></li><li><div><strong>5 teardown videos / week</strong><span>Free, five minutes, three specific fixes. Highest-converting asset you have.</span></div></li><li><div><strong>Ship the 40-point Audit</strong><span>Scored and shareable. The score is the hook; the gap is the sale.</span></div></li><li><div><strong>6-email nurture live</strong><span>Plain text, your address, one idea each.</span></div></li><li><div><strong>3 videos + 2 carousels / week</strong><span>Your art direction, finally pointed at your own business.</span></div></li><li><div><strong>8 weeks before targets</strong><span>Measure your own baselines. Don't import benchmarks you can't source.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 4</span><h3>Sales System</h3></header><ol><li><div><strong>Learn the frame verbatim</strong><span>The opening and the reflect-back, word for word until it's yours.</span></div></li><li><div><strong>Never quote before diagnosing</strong><span>No exceptions. It's the entire differentiator.</span></div></li><li><div><strong>Book call two before hanging up</strong><span>A booked slot beats ten follow-ups.</span></div></li><li><div><strong>Recap within 2 hours</strong><span>Their problem in their words, the proposal, the next step.</span></div></li><li><div><strong>A CRM with four fields</strong><span>Score, trigger event, objection raised, next action + date.</span></div></li><li><div><strong>Hold price, cut scope</strong><span>Discounting invoice one sets the ceiling forever.</span></div></li><li><div><strong>Disqualify out loud</strong><span>Early, and to their face. Most persuasive move in the call.</span></div></li><li><div><strong>3–5 calls booked / week</strong><span>The only activity number that predicts revenue.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 5</span><h3>Delivery Engine</h3></header><ol><li><div><strong>Standardise the tracking fix</strong><span>Leak 01 at SHE STREET. It will be leak 01 almost everywhere.</span></div></li><li><div><strong>One reporting template</strong><span>Blended MER and contribution margin. Built once, reused.</span></div></li><li><div><strong>SOP each audit pillar</strong><span>Acquisition, conversion, retention, economics — written down, not in your head.</span></div></li><li><div><strong>Baselines in writing, week 2</strong><span>Signed off by the client before anything changes.</span></div></li><li><div><strong>Report day 90 honestly</strong><span>Whether it moved or not. This is the whole reputation.</span></div></li><li><div><strong>Weekly 30-min decision call</strong><span>With the founder. A decision meeting, not a status update.</span></div></li><li><div><strong>Client keeps everything</strong><span>Accounts, assets, dashboards, SOPs in their name. No hostages.</span></div></li><li><div><strong>Cap concurrent engagements</strong><span>Delivery quality is the constraint, not demand.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 6</span><h3>Team &amp; Handover</h3></header><ol><li><div><strong>List all five hats</strong><span>Ads, marketing, art direction, creative execution, eCom management. One person wearing all of them is the actual problem.</span></div></li><li><div><strong>Rank by “who could do this at 80%?”</strong><span>Hand over the easiest first. 80% done by someone else beats 100% done by you.</span></div></li><li><div><strong>Lead designer owns art direction</strong><span>End to end. You approve, you stop producing.</span></div></li><li><div><strong>Creative producer runs execution</strong><span>Off your briefs. You write the brief, they make the work.</span></div></li><li><div><strong>Media buyer owns the account</strong><span>Day to day. You review weekly against blended MER.</span></div></li><li><div><strong>Write the brief template</strong><span>The document that lets someone direct without you in the room.</span></div></li><li><div><strong>One role handed over per quarter</strong><span>Named successor, written handover, a date. Four quarters, four hats gone.</span></div></li><li><div><strong>Your job: strategy, review, the call</strong><span>Nothing else. Write that down and check yourself against it.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 7</span><h3>Money &amp; Structure</h3></header><ol><li><div><strong>Separate entity and books</strong><span>Own ABN, own account, own P&amp;L for Neon Mountain. Day one.</span></div></li><li><div><strong>SHE STREET pays full rate</strong><span>It becomes client #1, not a favour. Mates' rates hide a broken model.</span></div></li><li><div><strong>Cost the team before pricing</strong><span>Price for the designers and buyer you need, not the solo operator you are.</span></div></li><li><div><strong>6 months runway first</strong><span>Before you reduce any income. Non-negotiable.</span></div></li><li><div><strong>Blended margin, monthly</strong><span>Per client. The number that says whether the model works.</span></div></li><li><div><strong>No client over 30%</strong><span>Including SHE STREET. Concentration turns a bad month into an ending.</span></div></li><li><div><strong>Lawyer the contracts</strong><span>Guarantee wording and engagement terms, before the first external client.</span></div></li><li><div><strong>Set a drawing and hold it</strong><span>A number you pay yourself. Don't dip past it to feel safe.</span></div></li></ol></section><section class="card"><header><span class="num">Pillar 8</span><h3>Founder &amp; Focus</h3></header><ol><li><div><strong>Track two weeks of hours</strong><span>By role, before deciding anything. You'll be wrong about where it goes.</span></div></li><li><div><strong>Set the target split</strong><span>What % is Neon Mountain, what % is SHE STREET oversight. Write the number.</span></div></li><li><div><strong>3 protected days / week</strong><span>Neon Mountain only. In the calendar, defended like a client call.</span></div></li><li><div><strong>Stop executing creative</strong><span>Brief it, review it, don't make it. This is the hardest one on the chart.</span></div></li><li><div><strong>Art direction = approval</strong><span>Not production. Your taste is the asset; your hands are the bottleneck.</span></div></li><li><div><strong>Say no to everything else</strong><span>Not client growth or team-building? It's a no.</span></div></li><li><div><strong>Weekly: what did I do that they should have?</strong><span>Name it. Then hand that specific thing over.</span></div></li><li><div><strong>Quarterly: kill, don't add</strong><span>Cut the action that isn't working. Never bolt on a ninth.</span></div></li></ol></section>    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">How to run it</p>
+    <h2>The chart is worthless if it's only read.</h2>
+    <dl class="rhythm">
+      <div><dt>Weekly</dt><dd>Pipeline review, same time, non-negotiable. Pick three actions for the week — never more.</dd></div>
+      <div><dt>Monthly</dt><dd>Mark what actually moved. Count the blanks honestly; they're the signal.</dd></div>
+      <div><dt>Quarterly</dt><dd>Kill the action that isn't working. Never add a ninth to a pillar — replace.</dd></div>
+      <div><dt>The order</dt><dd>Pillar 6 first, then 1 and 7. Hand over a hat, build the proof, separate the books. Selling hard before you have capacity just buys yourself a worse job.</dd></div>
+    </dl>
+
+    <div class="note">
+      <h3>Where I'm working from assumptions, not facts</h3>
+      <ul>
+        <li><strong>The central goal is a proposal, not a forecast.</strong> $50k/month, six clients and September 2027 are numbers I chose to be specific enough to act on. I have no visibility into your runway, your living costs, your team size or what SHE STREET needs from you — all of which change the date. Rewrite the centre cell before you use the chart.</li>
+        <li><strong>I revised this chart mid-build</strong> once you said you want to phase out of execution rather than cut ties. Pillars 6, 7 and 8 were rewritten: SHE STREET stays, as a full-rate client, and the detachment is from the work rather than the company. Tell me if that's still off.</li>
+        <li><strong>I don't know your team.</strong> Pillar 6 assumes you have designers who can absorb art direction and a path to a media buyer. If you have one junior designer, the quarterly handover pace is wrong and the hiring actions come first.</li>
+        <li><strong>The Growth Monitor in Pillar 2 does not exist yet.</strong> Actions 5–7 build and test it before selling it. Don't sell it before it catches something you didn't already know.</li>
+        <li><strong>One teardown is not validation.</strong> SHE STREET is a real proof point and a brand you own — which is exactly why Pillar 1 action 3 exists.</li>
+        <li><strong>The Mandala (Mandal-Art) method itself</strong> is a well-known goal-setting grid, popularised in sport. I'm confident about the format; I'd avoid repeating any specific claim about its origin or effectiveness without checking a primary source.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <p>Neon Mountain · Independence Mandala</p>
+    <p>1 goal · 8 pillars · 64 actions</p>
+  </div>
+</footer>
