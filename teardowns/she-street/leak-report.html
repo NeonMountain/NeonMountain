@@ -1,0 +1,352 @@
+<title>SHE STREET Leak Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Newsreader:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#0B1017; --ground-2:#121A24; --ground-3:#18222E;
+  --ink:#E8EDF2; --ink-2:#9AA8B8; --ink-3:#66788C;
+  --rule:#1E2A38; --rule-strong:#2C3B4C;
+  --glow:#FFB03A; --glow-ink:#FFC163; --glow-soft:rgba(255,176,58,.13); --glow-line:rgba(255,176,58,.34);
+  --ice:#7FB3D5; --ice-soft:rgba(127,179,213,.11);
+  --crit:#FF6B57; --crit-soft:rgba(255,107,87,.13); --crit-line:rgba(255,107,87,.36);
+  --good:#5FBF8F; --good-soft:rgba(95,191,143,.12); --good-line:rgba(95,191,143,.32);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 32px -12px rgba(0,0,0,.6);
+  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --measure:64ch; --wide:1080px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+    --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+    --rule:#DDE4EB; --rule-strong:#C4CFD9;
+    --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.09); --glow-line:rgba(169,98,10,.30);
+    --ice:#2F6E96; --ice-soft:rgba(47,110,150,.09);
+    --crit:#C0341C; --crit-soft:rgba(192,52,28,.08); --crit-line:rgba(192,52,28,.28);
+    --good:#1F7A52; --good-soft:rgba(31,122,82,.08); --good-line:rgba(31,122,82,.26);
+    --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+  --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+  --rule:#DDE4EB; --rule-strong:#C4CFD9;
+  --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.09); --glow-line:rgba(169,98,10,.30);
+  --crit:#C0341C; --crit-soft:rgba(192,52,28,.08); --crit-line:rgba(192,52,28,.28);
+  --good:#1F7A52; --good-soft:rgba(31,122,82,.08); --good-line:rgba(31,122,82,.26);
+  --ice:#2F6E96; --ice-soft:rgba(47,110,150,.09);
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+p{margin:0}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+.wrap{width:100%;max-width:var(--wide);margin-inline:auto;padding-inline:24px}
+.col{max-width:var(--measure)}
+.sec{padding-block:clamp(44px,6vw,72px);border-top:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--glow);margin:0 0 16px}
+h2{font-size:clamp(26px,3.6vw,36px)}
+h3{font-size:clamp(19px,2.2vw,23px);letter-spacing:-.012em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.stack{display:flex;flex-direction:column;gap:18px}
+
+/* masthead */
+.mast{padding-block:26px 0}
+.mast-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--rule)}
+.mark{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:15px}
+.mast-meta{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:right;line-height:1.7}
+.hero{padding-block:clamp(38px,5vw,60px) 0}
+.hero h1{font-size:clamp(32px,5.4vw,54px);max-width:18ch;margin-bottom:20px}
+.hero .lede{font-size:clamp(18px,2vw,21px);color:var(--ink-2);max-width:58ch}
+
+/* baseline strip */
+.base{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:0;margin-top:40px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.base div{padding:20px 22px 22px 0}
+.base dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.base dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:clamp(20px,2.4vw,25px);font-weight:500;letter-spacing:-.02em}
+.base small{display:block;font-family:var(--f-body);font-size:13.5px;color:var(--ink-3);margin-top:6px;letter-spacing:0;text-transform:none}
+
+/* leak cards */
+.leak{background:var(--ground-2);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow);margin-top:26px;overflow:hidden}
+.leak-head{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-start;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--rule);background:var(--ground-3)}
+.leak-id{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
+.leak-head h3{max-width:26ch}
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:2px;white-space:nowrap}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.c-crit{color:var(--crit);background:var(--crit-soft);border:1px solid var(--crit-line)}
+.c-high{color:var(--glow);background:var(--glow-soft);border:1px solid var(--glow-line)}
+.c-good{color:var(--good);background:var(--good-soft);border:1px solid var(--good-line)}
+.leak-body{padding:26px 28px}
+.leak-body p{max-width:62ch}
+.leak-body p + p{margin-top:14px}
+.evidence{margin:22px 0;border:1px solid var(--rule);border-radius:2px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:13.5px}
+th,td{text-align:right;padding:11px 14px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--ground-3);font-weight:500;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+tbody tr:last-child td{border-bottom:0}
+tr.flag td{background:var(--crit-soft);color:var(--crit)}
+tr.tot td{border-top:1px solid var(--rule-strong);font-weight:500}
+.so-what{border-left:2px solid var(--glow);padding:3px 0 3px 18px;margin-top:22px;font-family:var(--f-display);font-weight:600;font-size:18.5px;letter-spacing:-.008em;line-height:1.38;max-width:56ch}
+.leak.is-crit{border-color:var(--crit-line)}
+.leak.is-good{border-color:var(--good-line)}
+
+/* model */
+.assume{background:var(--ice-soft);border:1px solid var(--rule);border-radius:2px;padding:18px 20px;margin:24px 0;font-family:var(--f-mono);font-size:12.5px;line-height:1.7;color:var(--ink-2);max-width:70ch}
+.assume b{color:var(--ink);font-weight:500}
+
+/* roadmap */
+.road{margin-top:38px;border-top:1px solid var(--rule)}
+.phase{display:grid;grid-template-columns:112px 1fr;gap:26px;padding:24px 0;border-bottom:1px solid var(--rule)}
+.phase-when{font-family:var(--f-mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--glow);padding-top:4px}
+.phase h4{font-size:18px;margin-bottom:10px}
+.phase ul{margin:0;padding-left:19px;color:var(--ink-2);font-size:16.5px;line-height:1.62}
+.phase li{margin-bottom:5px}
+@media(max-width:640px){.phase{grid-template-columns:1fr;gap:10px}}
+
+.gap{background:var(--ground-2);border:1px dashed var(--rule-strong);border-radius:3px;padding:26px 28px;margin-top:28px}
+.gap h3{margin-bottom:14px;font-size:19px}
+.gap ul{margin:0;padding-left:19px;color:var(--ink-2);font-size:16.5px;line-height:1.62}
+.gap li{margin-bottom:7px}
+.foot{padding-block:30px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:space-between}
+.foot p{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3)}
+</style>
+
+<header class="wrap mast">
+  <div class="mast-row">
+    <span class="mark">
+      <svg width="20" height="20" viewBox="0 0 22 22" aria-hidden="true"><path d="M1 19 L8 5 L12 12 L14.5 8 L21 19 Z" fill="none" stroke="var(--glow)" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      Neon Mountain
+    </span>
+    <span class="mast-meta">Growth Teardown · Leak Report<br>SHE STREET · 12 September 2026</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Finding 00 — the headline</p>
+    <h1>You can't see where 59% of your revenue comes from.</h1>
+    <p class="lede">SHE STREET is a $3.4M business with genuinely strong retention and a conversion rate that has fallen by roughly a third in twelve months. Both of those facts are being obscured by a measurement layer that isn't telling you the truth — including one month of data you should throw away entirely.</p>
+
+    <dl class="base">
+      <div><dt>Gross sales · TTM</dt><dd>$3.40M</dd><small>Sep 2025 – Aug 2026, AUD</small></div>
+      <div><dt>Orders · TTM</dt><dd>26,526</dd><small>~2,210 per month</small></div>
+      <div><dt>Returning customer rate</dt><dd>~60%</dd><small>Stable all 12 months</small></div>
+      <div><dt>Discounts · TTM</dt><dd>$308,249</dd><small>9.06% of gross sales</small></div>
+      <div><dt>Conversion rate</dt><dd>1.5%</dd><small>Down from 2.37% Aug 2025</small></div>
+    </dl>
+  </section>
+
+  <!-- LEAK 1 -->
+  <section class="sec">
+    <p class="eyebrow">Ranked by impact</p>
+    <h2>Three leaks, and one thing you should protect.</h2>
+
+    <div class="leak is-crit">
+      <div class="leak-head">
+        <div><p class="leak-id">Leak 01 · Measurement</p><h3>59% of revenue is attributed to nothing at all</h3></div>
+        <span class="chip c-crit">Critical · fix first</span>
+      </div>
+      <div class="leak-body">
+        <p>Over the last 180 days, Shopify attributes $1.01M of orders to a blank referrer source. Email — which is running ten live Klaviyo flows against a list that produces a 60% returning customer rate — is credited with <strong>20 orders</strong>. Paid is credited with zero.</p>
+        <p>Email did not generate $3,087 in six months. Those orders exist; they're sitting in the blank row, because the links people click aren't carrying UTM parameters through to the order. The same is true of any paid traffic you're running.</p>
+        <div class="evidence">
+          <table>
+            <thead><tr><th>Order referrer source</th><th>Orders</th><th>Gross sales</th><th>Share</th></tr></thead>
+            <tbody>
+              <tr class="flag"><td>(blank / untagged)</td><td>7,173</td><td>$1,014,931</td><td>59.1%</td></tr>
+              <tr><td>social</td><td>3,858</td><td>$477,201</td><td>27.8%</td></tr>
+              <tr><td>search</td><td>1,705</td><td>$222,814</td><td>13.0%</td></tr>
+              <tr class="flag"><td>email</td><td>20</td><td>$3,088</td><td>0.2%</td></tr>
+              <tr class="tot"><td>Total · 180 days</td><td>12,756</td><td>$1,718,033</td><td>100%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>This is the root cause of every other number in this report being hard to argue about. You cannot judge whether a channel is working, you cannot calculate a real blended MER, and you cannot tell whether Klaviyo's attributed revenue is incremental or double-counted against Meta's.</p>
+        <p class="so-what">Every decision about where to spend money at SHE STREET is currently being made on 41% of the picture.</p>
+      </div>
+    </div>
+
+    <!-- LEAK 2 -->
+    <div class="leak is-crit">
+      <div class="leak-head">
+        <div><p class="leak-id">Leak 02 · Conversion</p><h3>Conversion has fallen ~36%, and August's data is contaminated</h3></div>
+        <span class="chip c-crit">Critical</span>
+      </div>
+      <div class="leak-body">
+        <p>Two separate things are happening here and they have to be untangled before anyone draws a conclusion.</p>
+        <p><strong>First, the contamination.</strong> In August 2026, the <span class="mono">direct / desktop</span> segment recorded 87,867 sessions — five times July's level — and converted at <strong>0.15%</strong>. That is not human traffic. It inflated August sessions to 191,881 and dragged the reported conversion rate down to 0.89%. It had largely stopped by September.</p>
+        <div class="evidence">
+          <table>
+            <thead><tr><th>August 2026 · by source</th><th>Sessions</th><th>Converted</th><th>CVR</th></tr></thead>
+            <tbody>
+              <tr class="flag"><td>direct / desktop</td><td>87,867</td><td>131</td><td>0.15%</td></tr>
+              <tr><td>social / mobile</td><td>49,958</td><td>605</td><td>1.21%</td></tr>
+              <tr><td>direct / mobile</td><td>41,207</td><td>630</td><td>1.53%</td></tr>
+              <tr><td>search / mobile</td><td>5,911</td><td>190</td><td>3.21%</td></tr>
+              <tr><td>search / desktop</td><td>1,494</td><td>65</td><td>4.35%</td></tr>
+              <tr class="tot"><td>August as reported</td><td>191,881</td><td>1,707</td><td>0.89%</td></tr>
+              <tr class="tot"><td>August excluding the anomaly</td><td>104,014</td><td>1,576</td><td>1.52%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Second, the real decline.</strong> Strip the anomaly out and conversion is still falling: 2.37% in August 2025, 2.18% in March 2026, 1.72% in June, 1.53% in July, 1.52% in August, 1.34% so far in September. Sessions grew over the same period. You have been buying more traffic that converts less.</p>
+        <p>The leak is at the top of the funnel, not at checkout. Session-to-cart-addition fell from 8.6% to 3.7% year on year, while cart-to-checkout and checkout-completion stayed broadly flat. People are arriving and not engaging — which points at traffic quality and landing experience, not at your checkout.</p>
+        <p class="so-what">Your checkout is fine. The problem is who is arriving, and what they land on.</p>
+      </div>
+    </div>
+
+    <!-- LEAK 3 -->
+    <div class="leak">
+      <div class="leak-head">
+        <div><p class="leak-id">Leak 03 · Margin</p><h3>Discount rate drifted from 8.1% to 12.7%</h3></div>
+        <span class="chip c-high">High</span>
+      </div>
+      <div class="leak-body">
+        <p>Discounting as a share of gross sales averaged 8.07% across September–December 2025. Across April–July 2026 it averaged 12.74%, peaking at 15.2% in July. Revenue did not rise to match — July 2026 gross sales were $334,155 against March's $334,532, with $32,000 more given away to get there.</p>
+        <div class="evidence">
+          <table>
+            <thead><tr><th>Period</th><th>Gross sales</th><th>Discounts</th><th>Discount rate</th></tr></thead>
+            <tbody>
+              <tr><td>Sep–Dec 2025</td><td>$1,132,819</td><td>$91,468</td><td>8.07%</td></tr>
+              <tr><td>Jan–Mar 2026</td><td>$822,573</td><td>$47,940</td><td>5.83%</td></tr>
+              <tr class="flag"><td>Apr–Jul 2026</td><td>$1,171,343</td><td>$149,222</td><td>12.74%</td></tr>
+              <tr><td>Aug 2026</td><td>$274,408</td><td>$19,619</td><td>7.15%</td></tr>
+              <tr class="tot"><td>Trailing 12 months</td><td>$3,401,143</td><td>$308,249</td><td>9.06%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The Welcome flow offers 10% off and has not been edited since May 2025. A list that has been trained for sixteen months to expect a discount on entry will not buy at full price later, which is the mechanism by which a welcome offer quietly becomes a margin problem.</p>
+        <p class="so-what">Holding discount rate at the 8.07% you achieved last spring, rather than the 12.74% of April–July, is worth about <strong>$159,000 a year</strong> in retained gross margin at current revenue.</p>
+      </div>
+    </div>
+
+    <!-- STRENGTH -->
+    <div class="leak is-good">
+      <div class="leak-head">
+        <div><p class="leak-id">Not a leak · protect this</p><h3>Retention is the engine, and it is working</h3></div>
+        <span class="chip c-good">Strength</span>
+      </div>
+      <div class="leak-body">
+        <p>Returning customer rate has held between 55% and 66% every single month for twelve months, averaging about 60%. Roughly 14,500 of your 26,500 annual orders come from people who have bought before. That is a genuinely good number for apparel and it is the reason the business is stable while conversion has been falling.</p>
+        <p>New customer acquisition is what's flat: 10,101 new customers in twelve months, averaging 842 a month with no trend up. The business is being carried by people who already know you.</p>
+        <p class="so-what">The risk here isn't that retention breaks. It's that discounting to hit revenue targets slowly erodes the margin on the 60% of orders that are currently your most profitable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODEL -->
+  <section class="sec">
+    <p class="eyebrow">The growth model</p>
+    <h2>What the conversion gap is worth.</h2>
+    <div class="col"><p>This is arithmetic on your own numbers, not a forecast. It shows what different conversion rates are worth at your current traffic and AOV — nothing about how hard each one is to reach.</p></div>
+
+    <div class="assume">
+      <b>ASSUMPTIONS, STATED:</b><br>
+      · Monthly sessions: <b>102,922</b> — trailing 12-month average with ~70,000 contaminated August sessions removed<br>
+      · AOV: <b>$120</b> — approximate recent monthly average, AUD<br>
+      · Baseline CVR: <b>1.50%</b> — July/August 2026 clean level<br>
+      · Gross sales basis, before discounts, COGS and returns<br>
+      · Assumes traffic volume and mix hold constant, which they will not
+    </div>
+
+    <div class="evidence">
+      <table>
+        <thead><tr><th>If conversion rate were</th><th>Orders / month</th><th>Gross sales / month</th><th>vs baseline / year</th></tr></thead>
+        <tbody>
+          <tr><td>1.50% — where you are now</td><td>1,544</td><td>$185,260</td><td>—</td></tr>
+          <tr><td>1.75%</td><td>1,801</td><td>$216,137</td><td>+$370,520</td></tr>
+          <tr><td>2.00%</td><td>2,058</td><td>$247,014</td><td>+$741,041</td></tr>
+          <tr><td>2.37% — your own Aug 2025 level</td><td>2,439</td><td>$292,711</td><td>+$1,289,411</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <p>Put plainly: <strong>each 0.1 percentage point of conversion rate is worth roughly $148,000 a year</strong> in gross sales at your current traffic. You have lost about 0.87 points in twelve months.</p>
+      <p style="margin-top:14px">The reason this is the second priority and not the first is that until Leak 01 is fixed, you cannot tell which traffic source is responsible for the decline — so you would be optimising blind.</p>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="sec">
+    <p class="eyebrow">90-day roadmap</p>
+    <h2>Sequenced, not simultaneous.</h2>
+    <div class="col"><p>Three leaks fixed properly beats twelve started badly. Measurement first, because everything after it depends on the numbers being true.</p></div>
+
+    <div class="road">
+      <div class="phase">
+        <p class="phase-when">Days 1–14</p>
+        <div>
+          <h4>Make the numbers true</h4>
+          <ul>
+            <li>UTM tagging on every Klaviyo flow and campaign link, and on all paid placements</li>
+            <li>Identify and filter the <span class="mono">direct/desktop</span> bot traffic; add a filtered analytics view so future months aren't polluted</li>
+            <li>Re-baseline August and re-state any reporting that used it</li>
+            <li>Agree one reporting source of truth tied to blended MER and contribution margin</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <p class="phase-when">Days 15–45</p>
+        <div>
+          <h4>Stop the margin bleed</h4>
+          <ul>
+            <li>Rebuild the Welcome flow — test a non-discount entry offer against the standing 10%</li>
+            <li>Audit every live discount code and its actual incremental contribution</li>
+            <li>Set a discount rate ceiling and report against it weekly</li>
+            <li>Archive the 17 draft and test flows cluttering Klaviyo; refresh Winback (untouched 3 years) and Product Review / Cross-Sell (untouched 4.5 years)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <p class="phase-when">Days 46–75</p>
+        <div>
+          <h4>Fix the top of the funnel</h4>
+          <ul>
+            <li>Diagnose the session-to-cart collapse by source, now that sources are trustworthy</li>
+            <li>Landing experience work on the pages taking social/mobile traffic — 1.21% CVR against search/mobile's 3.21% is the gap to close</li>
+            <li>Mobile PDP and load-speed pass; mobile is the overwhelming majority of real traffic</li>
+            <li>Structured conversion tests, two per month, sequenced by impact</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <p class="phase-when">Days 76–90</p>
+        <div>
+          <h4>Compound and hand over</h4>
+          <ul>
+            <li>Results read-out against the day-14 baseline, reported honestly whether it moved or not</li>
+            <li>New-customer acquisition plan — the flat 842/month is the real ceiling on the business</li>
+            <li>Documented SOPs for the testing and reporting cadence</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAPS -->
+  <section class="sec">
+    <p class="eyebrow">Scope</p>
+    <h2>What this teardown could not see.</h2>
+    <div class="gap">
+      <h3>Honest limitations</h3>
+      <ul>
+        <li><strong>Meta / paid ad accounts were not connected</strong> — no spend, CAC, ROAS or creative performance data. The acquisition pillar here is inferred from Shopify session and order data only, and Leak 01 means even that is partial.</li>
+        <li><strong>No COGS or margin data</strong> — every figure is gross sales. Contribution margin, true CAC ceiling and LTV:CAC could not be calculated.</li>
+        <li><strong>Klaviyo flow-level revenue not pulled</strong> — flow structure, status and staleness were audited; per-flow attributed revenue was not.</li>
+        <li><strong>September 2026 is partial</strong> (11 days) and excluded from all trend calculations.</li>
+        <li><strong>The bot-traffic conclusion is inference</strong>, not proof — 87,867 sessions converting at 0.15% is the signature of invalid traffic, but confirming it needs server log or GA4 review.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <p>Neon Mountain · Growth Teardown · SHE STREET</p>
+    <p>Sources: Shopify Analytics, Klaviyo API · Generated 12 Sep 2026</p>
+  </div>
+</footer>

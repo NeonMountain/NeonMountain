@@ -1,0 +1,545 @@
+<title>Neon Mountain Growth System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Newsreader:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* ============ TOKENS — dark-first, mirrored for light ============ */
+:root{
+  --ground:#0B1017; --ground-2:#121A24; --ground-3:#18222E;
+  --ink:#E8EDF2; --ink-2:#9AA8B8; --ink-3:#66788C;
+  --rule:#1E2A38; --rule-strong:#2C3B4C;
+  --glow:#FFB03A; --glow-ink:#FFC163; --glow-soft:rgba(255,176,58,.13); --glow-line:rgba(255,176,58,.34);
+  --ice:#7FB3D5; --ice-soft:rgba(127,179,213,.11);
+  --ridge-1:#1B2836; --ridge-2:#15202C; --ridge-3:#101922;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 32px -12px rgba(0,0,0,.6);
+  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --measure:62ch; --wide:1120px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+    --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+    --rule:#DDE4EB; --rule-strong:#C4CFD9;
+    --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.09); --glow-line:rgba(169,98,10,.30);
+    --ice:#2F6E96; --ice-soft:rgba(47,110,150,.09);
+    --ridge-1:#E6EDF4; --ridge-2:#DAE4EE; --ridge-3:#CCDAE6;
+    --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+  --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+  --rule:#DDE4EB; --rule-strong:#C4CFD9;
+  --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.09); --glow-line:rgba(169,98,10,.30);
+  --ice:#2F6E96; --ice-soft:rgba(47,110,150,.09);
+  --ridge-1:#E6EDF4; --ridge-2:#DAE4EE; --ridge-3:#CCDAE6;
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+}
+
+/* ============ BASE ============ */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:19px; line-height:1.62;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--f-display); font-weight:800; line-height:1.06; letter-spacing:-.022em; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--glow); outline-offset:3px; border-radius:2px}
+.wrap{width:100%; max-width:var(--wide); margin-inline:auto; padding-inline:24px}
+.col{max-width:var(--measure)}
+.sec{padding-block:clamp(64px,9vw,116px)}
+.sec + .sec{border-top:1px solid var(--rule)}
+
+/* Utility type roles */
+.eyebrow{
+  font-family:var(--f-mono); font-size:12px; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--glow); margin:0 0 20px
+}
+.eyebrow.is-cool{color:var(--ice)}
+.lede{font-size:clamp(19px,2.1vw,22px); color:var(--ink-2); line-height:1.58}
+.mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+h2{font-size:clamp(30px,4.4vw,46px)}
+h3{font-size:clamp(21px,2.4vw,25px); letter-spacing:-.015em}
+.stack-l{display:flex; flex-direction:column; gap:26px}
+.stack-m{display:flex; flex-direction:column; gap:16px}
+
+/* ============ NAV ============ */
+.nav{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding-block:22px; border-bottom:1px solid var(--rule);
+}
+.mark{display:flex; align-items:center; gap:10px; text-decoration:none}
+.mark-txt{font-family:var(--f-display); font-weight:800; font-size:16px; letter-spacing:-.01em}
+.mark-sub{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+  background:var(--glow); color:var(--ground);
+  font-family:var(--f-display); font-weight:800; font-size:16px; letter-spacing:-.005em;
+  padding:15px 26px; border:1px solid var(--glow); border-radius:2px;
+  transition:transform .16s ease, filter .16s ease;
+}
+.btn:hover{filter:brightness(1.08); transform:translateY(-1px)}
+.btn-sm{padding:10px 18px; font-size:14px}
+.btn-ghost{background:transparent; color:var(--ink); border-color:var(--rule-strong)}
+.btn-ghost:hover{border-color:var(--glow); filter:none}
+.cta-note{font-family:var(--f-mono); font-size:12.5px; color:var(--ink-3); line-height:1.6; max-width:44ch}
+
+/* ============ HERO ============ */
+.hero{padding-top:clamp(52px,7vw,84px); padding-bottom:0}
+.hero h1{font-size:clamp(38px,7.2vw,74px); max-width:16ch; margin-bottom:26px}
+.hero .lede{max-width:54ch}
+.hero-cta{display:flex; flex-wrap:wrap; align-items:center; gap:18px 22px; margin-top:34px}
+.hero-facts{
+  display:flex; flex-wrap:wrap; gap:8px 28px; margin-top:38px; padding-top:20px;
+  border-top:1px solid var(--rule);
+  font-family:var(--f-mono); font-size:12.5px; letter-spacing:.02em; color:var(--ink-3);
+}
+.hero-facts b{color:var(--ink-2); font-weight:500}
+
+/* Ridgeline */
+.ridge{display:block; width:100%; height:clamp(150px,22vw,270px); margin-top:clamp(34px,5vw,52px)}
+@media (prefers-reduced-motion:no-preference){
+  .sun{animation:breathe 9s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.85}50%{opacity:1}}
+}
+
+/* ============ BLAME LOOP ============ */
+.loop{display:grid; grid-template-columns:64px 1fr; margin-top:44px; max-width:720px}
+.loop-gutter{position:relative}
+.loop-gutter svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
+.loop-items{display:flex; flex-direction:column; gap:0}
+.loop-item{padding:20px 0 20px 26px; border-left:1px solid var(--rule); position:relative}
+.loop-item::before{
+  content:""; position:absolute; left:-4.5px; top:29px;
+  width:8px; height:8px; border-radius:50%; background:var(--ice);
+}
+.loop-who{font-family:var(--f-mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:6px}
+.loop-say{font-size:19px; color:var(--ink-2); font-style:italic}
+.loop-you{
+  margin-left:26px; margin-top:8px; padding:22px 24px;
+  background:var(--glow-soft); border:1px solid var(--glow-line); border-radius:2px;
+}
+.loop-you .loop-who{color:var(--glow)}
+.loop-you p{font-size:19px; color:var(--ink); font-style:normal}
+.loop-return{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+
+/* ============ PILLARS ============ */
+.pillars{display:grid; grid-template-columns:repeat(auto-fit,minmax(238px,1fr)); gap:0; margin-top:48px; border-top:1px solid var(--rule)}
+.pillar{padding:30px 26px 34px 0; border-bottom:1px solid var(--rule)}
+.pillar h3{margin-bottom:10px}
+.pillar p{font-size:17.5px; color:var(--ink-2); line-height:1.56}
+.pillar .tag{font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:12px}
+
+/* ============ TEARDOWN FEATURE ============ */
+.feature{
+  background:var(--ground-2); border:1px solid var(--rule); border-radius:3px;
+  box-shadow:var(--shadow); overflow:hidden; margin-top:42px;
+}
+.feature-head{
+  display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:12px 28px;
+  padding:30px 32px; border-bottom:1px solid var(--rule); background:var(--ground-3);
+}
+.feature-head h3{font-size:clamp(24px,3vw,32px)}
+.price{font-family:var(--f-mono); font-variant-numeric:tabular-nums; font-size:clamp(26px,3.4vw,36px); font-weight:500; color:var(--glow-ink); letter-spacing:-.02em}
+.price small{display:block; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); margin-top:5px; font-weight:400}
+.feature-body{padding:32px}
+.deliver{list-style:none; margin:0 0 30px; padding:0; display:grid; gap:2px; counter-reset:d}
+.deliver li{display:grid; grid-template-columns:34px 1fr; gap:14px; padding:15px 0; border-bottom:1px solid var(--rule); align-items:start}
+.deliver li:last-child{border-bottom:0}
+.deliver li::before{
+  counter-increment:d; content:counter(d,decimal-leading-zero);
+  font-family:var(--f-mono); font-size:12px; color:var(--glow); padding-top:5px; letter-spacing:.04em;
+}
+.deliver strong{font-family:var(--f-display); font-weight:600; font-size:17.5px; display:block; margin-bottom:3px}
+.deliver span{font-size:17px; color:var(--ink-2); line-height:1.52}
+.guarantee{
+  border-left:2px solid var(--glow); padding:4px 0 4px 20px; margin-bottom:26px;
+  font-size:19.5px; font-family:var(--f-display); font-weight:600; letter-spacing:-.01em; line-height:1.32;
+}
+.feature-foot{display:flex; flex-wrap:wrap; align-items:center; gap:16px 24px}
+
+/* ============ ASCENT ============ */
+.ascent{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:20px; margin-top:46px; align-items:end}
+.camp{background:var(--ground-2); border:1px solid var(--rule); border-radius:3px; padding:26px 24px; display:flex; flex-direction:column; gap:12px}
+.camp-alt{display:flex; align-items:center; gap:10px; font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.camp-alt i{width:22px; height:1px; background:var(--rule-strong); font-style:normal}
+.camp h3{font-size:21px}
+.camp p{font-size:16.5px; color:var(--ink-2); line-height:1.54}
+.camp-price{font-family:var(--f-mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--ink); margin-top:auto; padding-top:14px; border-top:1px solid var(--rule)}
+.camp.is-here{border-color:var(--glow-line); background:linear-gradient(var(--glow-soft),var(--glow-soft)) var(--ground-2)}
+.camp.is-here .camp-alt{color:var(--glow)}
+.camp.is-here .camp-alt i{background:var(--glow-line)}
+@media (min-width:820px){
+  .camp-2{margin-bottom:26px}
+  .camp-3{margin-bottom:52px}
+}
+
+/* ============ FIT / NOT FIT ============ */
+.fit{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:20px; margin-top:44px}
+.fit-card{border:1px solid var(--rule); border-radius:3px; padding:28px 26px; background:var(--ground-2)}
+.fit-card h3{font-size:19px; margin-bottom:18px}
+.fit-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:13px}
+.fit-list li{display:grid; grid-template-columns:20px 1fr; gap:12px; font-size:17px; color:var(--ink-2); line-height:1.5}
+.fit-list li::before{content:"—"; font-family:var(--f-mono); font-size:14px; padding-top:2px}
+.fit-yes{border-top:2px solid var(--glow)}
+.fit-yes .fit-list li::before{content:"+"; color:var(--glow)}
+.fit-no{border-top:2px solid var(--ice)}
+.fit-no .fit-list li::before{content:"×"; color:var(--ice)}
+
+/* ============ FAQ ============ */
+.faq{margin-top:42px; max-width:760px; border-top:1px solid var(--rule)}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{
+  display:flex; align-items:baseline; justify-content:space-between; gap:20px; cursor:pointer;
+  list-style:none; padding:22px 0;
+  font-family:var(--f-display); font-weight:600; font-size:18.5px; letter-spacing:-.01em; line-height:1.34;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+"; font-family:var(--f-mono); font-size:19px; color:var(--glow); flex:none; line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq summary:hover{color:var(--glow-ink)}
+.faq-a{padding:0 0 24px; font-size:17.5px; color:var(--ink-2); max-width:60ch; line-height:1.6}
+
+/* ============ CLOSE / BOOK ============ */
+.book{background:var(--ground-2); border-top:1px solid var(--rule)}
+.book h2{max-width:17ch; margin-bottom:24px}
+.buildnote{
+  margin-top:34px; padding:16px 18px; border:1px dashed var(--rule-strong); border-radius:2px;
+  font-family:var(--f-mono); font-size:12.5px; line-height:1.65; color:var(--ink-3); max-width:60ch;
+}
+.buildnote b{color:var(--ink-2); font-weight:500}
+
+/* ============ FOOTER ============ */
+.foot{padding-block:34px; border-top:1px solid var(--rule); display:flex; flex-wrap:wrap; gap:12px 28px; justify-content:space-between; align-items:center}
+.foot p{font-family:var(--f-mono); font-size:12px; color:var(--ink-3); letter-spacing:.02em}
+</style>
+
+<header class="wrap">
+  <nav class="nav">
+    <a class="mark" href="#top">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <path d="M1 19 L8 5 L12 12 L14.5 8 L21 19 Z" fill="none" stroke="var(--glow)" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      <span>
+        <span class="mark-txt">Neon Mountain</span>
+      </span>
+    </a>
+    <span class="mark-sub">eCommerce Growth Partner</span>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">For Shopify brands doing $2M–$10M</p>
+      <h1>We turn fragmented eCommerce marketing into one revenue system.</h1>
+      <p class="lede">You don't need another ads agency, another site redesign, or more content. You need the four things that actually drive revenue — creative, acquisition, conversion and retention — connected, measured against one number, and owned by one team.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#book">Book a Growth Teardown →</a>
+        <p class="cta-note">30-minute call. We'll tell you on the call whether we can help, or whether you don't need us.</p>
+      </div>
+      <div class="hero-facts">
+        <span><b>Creative strategy</b></span>
+        <span><b>Paid acquisition</b></span>
+        <span><b>Shopify &amp; CRO</b></span>
+        <span><b>Email &amp; retention</b></span>
+        <span><b>AOV &amp; offer</b></span>
+      </div>
+    </div>
+    <svg class="ridge" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="var(--glow)" stop-opacity=".72"/>
+          <stop offset="55%" stop-color="var(--glow)" stop-opacity=".18"/>
+          <stop offset="100%" stop-color="var(--glow)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle class="sun" cx="742" cy="152" r="150" fill="url(#sunGrad)"/>
+      <path d="M0 300 L0 176 L118 120 L214 158 L322 92 L430 150 L536 118 L642 168 L1200 168 L1200 300 Z" fill="var(--ridge-1)"/>
+      <polyline points="0,176 118,120 214,158 322,92 430,150 536,118 642,168" fill="none" stroke="var(--glow)" stroke-opacity=".55" stroke-width="1.5"/>
+      <path d="M642 168 L742 104 L836 150 L940 116 L1046 162 L1130 138 L1200 170 L1200 300 L642 300 Z" fill="var(--ridge-1)"/>
+      <polyline points="642,168 742,104 836,150 940,116 1046,162 1130,138 1200,170" fill="none" stroke="var(--glow)" stroke-opacity=".55" stroke-width="1.5"/>
+      <path d="M0 300 L0 214 L96 176 L206 224 L318 168 L426 218 L548 182 L660 226 L768 188 L880 232 L1004 194 L1112 234 L1200 206 L1200 300 Z" fill="var(--ridge-2)"/>
+      <polyline points="0,214 96,176 206,224 318,168 426,218 548,182 660,226 768,188 880,232 1004,194 1112,234 1200,206" fill="none" stroke="var(--glow)" stroke-opacity=".3" stroke-width="1.2"/>
+      <path d="M0 300 L0 258 L130 232 L268 268 L392 240 L520 272 L648 246 L790 276 L918 250 L1058 278 L1200 254 L1200 300 Z" fill="var(--ridge-3)"/>
+    </svg>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow is-cool">The problem</p>
+        <h2>You have four vendors, four dashboards, and one flat bank balance.</h2>
+      </div>
+      <div class="loop">
+        <div class="loop-gutter">
+          <svg width="100%" height="100%" viewBox="0 0 64 400" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M50 380 L22 380 Q6 380 6 356 L6 42 Q6 18 22 18 L50 18" fill="none" stroke="var(--rule-strong)" stroke-width="1" stroke-dasharray="3 4"/>
+            <path d="M44 13 L52 18 L44 23 Z" fill="var(--rule-strong)"/>
+          </svg>
+        </div>
+        <div class="loop-items">
+          <div class="loop-item">
+            <p class="loop-who">Ads agency</p>
+            <p class="loop-say">"The site doesn't convert."</p>
+          </div>
+          <div class="loop-item">
+            <p class="loop-who">Developer</p>
+            <p class="loop-say">"The traffic quality is bad."</p>
+          </div>
+          <div class="loop-item">
+            <p class="loop-who">Email freelancer</p>
+            <p class="loop-say">"We only get sent the leftovers."</p>
+          </div>
+          <div class="loop-item">
+            <p class="loop-who">Content person</p>
+            <p class="loop-say">"Nobody tells us what's working."</p>
+          </div>
+          <div class="loop-you">
+            <p class="loop-who">You</p>
+            <p>Holding all the context, making every call, carrying all the risk. On a Sunday night. Between four dashboards that don't agree.</p>
+          </div>
+          <p class="loop-return" style="padding:18px 0 0 26px">↑ and around again, every month</p>
+        </div>
+      </div>
+      <div class="col stack-m" style="margin-top:44px">
+        <p class="lede">Everyone's metrics are green. Your P&amp;L isn't.</p>
+        <h3>You don't have four problems. You have one problem showing up in four places.</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFRAME -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col stack-l">
+        <div>
+          <p class="eyebrow">The mechanism</p>
+          <h2>Growth isn't a channel problem. It's a system problem.</h2>
+        </div>
+        <p>Most brands at your stage try to grow by adding: another agency, another channel, another freelancer, more spend. It doesn't work, because the constraint isn't capacity. It's that nothing is connected.</p>
+        <p>When creative, acquisition, conversion and retention are run separately, creative gets briefed on opinions instead of data. Media buying optimises to a platform number that doesn't reconcile to your P&amp;L. Your site is judged on how it looks instead of how it sells. Email waits for a sale to have something to say. And every gain in one place is quietly cancelled out somewhere else.</p>
+        <p><strong>A growth system means one strategy, one team, one number.</strong> What we learn in ads changes the site. What converts on the site changes the email. What retention tells us changes what we're willing to pay to acquire. That compounding is the entire point — and it is impossible to get from four vendors who have never spoken to each other.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">What we do</p>
+        <h2>One system. Four connected parts.</h2>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <span class="tag">Creative strategy</span>
+          <h3>Concepts from data, not moodboards</h3>
+          <p>A real testing pipeline built on what your account says works — so your ads stop dying of fatigue.</p>
+        </div>
+        <div class="pillar">
+          <span class="tag">Paid acquisition</span>
+          <h3>Run against blended MER</h3>
+          <p>Meta, Google and TikTok managed to contribution margin — the number in your bank account, not the one flattering a dashboard.</p>
+        </div>
+        <div class="pillar">
+          <span class="tag">Shopify &amp; CRO</span>
+          <h3>Hypothesis-led, not decorative</h3>
+          <p>Conversion work on the pages that carry your revenue. Fewer, better tests, sequenced by impact.</p>
+        </div>
+        <div class="pillar">
+          <span class="tag">Retention &amp; AOV</span>
+          <h3>Sell without discounting</h3>
+          <p>Flows, bundles and offer architecture that raise what a customer is worth — so you can afford to acquire more of them.</p>
+        </div>
+      </div>
+      <p class="cta-note" style="margin-top:28px; max-width:64ch">Plus AI automation across reporting, briefing and operations. You keep everything — accounts, assets, dashboards and documentation stay in your name.</p>
+    </div>
+  </section>
+
+  <!-- OFFER -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">Where it starts</p>
+        <h2>We don't quote before we know. So we start by finding out.</h2>
+      </div>
+      <div class="feature">
+        <div class="feature-head">
+          <h3>The Growth Teardown</h3>
+          <p class="price">$2,500<small>One week · fully credited</small></p>
+        </div>
+        <div class="feature-body">
+          <p style="color:var(--ink-2); margin-bottom:26px; max-width:58ch">We go through your Shopify analytics, ad accounts, Klaviyo and GA4, and give you four things:</p>
+          <ol class="deliver">
+            <li><div><strong>The Leak Report</strong><span>Every gap across acquisition, conversion, retention and AOV — each one sized against your own numbers and ranked by impact.</span></div></li>
+            <li><div><strong>The Growth Model</strong><span>What your revenue and contribution margin look like if the top three are fixed. Built on your data, with every assumption written on the face of it.</span></div></li>
+            <li><div><strong>A 90-day roadmap</strong><span>Sequenced, with effort and owners — executable whether or not you do it with us.</span></div></li>
+            <li><div><strong>A recorded findings session</strong><span>Sixty minutes with you and your team, walking through all of it.</span></div></li>
+          </ol>
+          <p class="guarantee">If we don't find at least three specific, quantified opportunities in your business, you don't pay.</p>
+          <p style="color:var(--ink-2); margin-bottom:28px; max-width:58ch">If you take the roadmap and run it yourself, that's a good outcome and we'll say so. If you want us to run it, the $2,500 comes straight off your first invoice.</p>
+          <div class="feature-foot">
+            <a class="btn" href="#book">Book a Growth Teardown →</a>
+            <p class="cta-note">Two hours of your time, total.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASCENT -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">If we work together</p>
+        <h2>Three steps. Each one earns the next.</h2>
+      </div>
+      <div class="ascent">
+        <div class="camp is-here camp-1">
+          <p class="camp-alt"><i></i>Step one · you are here</p>
+          <h3>Growth Teardown</h3>
+          <p>We find where the money is leaking, and size it against your own numbers.</p>
+          <p class="camp-price">$2,500 · one week</p>
+        </div>
+        <div class="camp camp-2">
+          <p class="camp-alt"><i></i>Step two</p>
+          <h3>90-Day Sprint</h3>
+          <p>We rebuild the three highest-impact parts of your customer journey. Tracking fixed first, so every number after it is trustworthy. Baselines agreed in writing in week two and reported against honestly at day 90 — whether they moved or not.</p>
+          <p class="camp-price">from $15,000</p>
+        </div>
+        <div class="camp camp-3">
+          <p class="camp-alt"><i></i>Step three</p>
+          <h3>Growth Partner</h3>
+          <p>We run the system month to month and compound the gains. Six-month initial term, then rolling with 30 days' notice. Ascent and Summit tiers.</p>
+          <p class="camp-price">$6,000–$10,000 / month</p>
+        </div>
+      </div>
+      <p class="cta-note" style="margin-top:26px">No lock-in by hostage. The retainer survives on results.</p>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col stack-l">
+        <div>
+          <p class="eyebrow">Proof</p>
+          <h2>We'd rather show you than tell you.</h2>
+        </div>
+        <p>We're selective about who we publish results for, and we won't put a number on this page we can't walk you through line by line.</p>
+        <p>On the Teardown, you'll see exactly how we work — on your business, with your data, in your accounts. That's a better proof than a testimonial anyway.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIT -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">Fit</p>
+        <h2>Who this is for — and who it isn't.</h2>
+      </div>
+      <div class="fit">
+        <div class="fit-card fit-yes">
+          <h3>This works if you're</h3>
+          <ul class="fit-list">
+            <li>Doing $2M–$10M on Shopify</li>
+            <li>Spending $30k+ a month on paid acquisition</li>
+            <li>Past product–market fit, stuck in the messy middle</li>
+            <li>Willing to give us real access to your data</li>
+            <li>Looking for a partner who owns the outcome, not a vendor who runs a channel</li>
+          </ul>
+        </div>
+        <div class="fit-card fit-no">
+          <h3>This won't work if you</h3>
+          <ul class="fit-list">
+            <li>Want performance-only pricing with no retainer</li>
+            <li>Need results in under 60 days</li>
+            <li>Are shopping for the cheapest quote on a single deliverable</li>
+            <li>Won't share your numbers</li>
+            <li>Want someone to execute a plan you've already decided on</li>
+          </ul>
+        </div>
+      </div>
+      <p class="cta-note" style="margin-top:26px; max-width:62ch">We'd genuinely rather tell you on the first call that we're not a fit than take your money and find out in month three.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="col"><p class="eyebrow">Questions</p><h2>The ones we get asked most.</h2></div>
+      <div class="faq">
+        <details open>
+          <summary>How is this different from the agency we've already got?</summary>
+          <p class="faq-a">Most agencies own a channel. We own the number. If your ads agency improves ROAS while your conversion rate drops, they've hit their target and you've made no more money. We're accountable for blended performance across the whole journey, which means we have nowhere to hide.</p>
+        </details>
+        <details>
+          <summary>Why do you charge for an audit when everyone else gives one away?</summary>
+          <p class="faq-a">Because a free audit is a sales pitch with a spreadsheet attached. A paid one takes about a week of senior time and produces something you can act on with or without us. Charging for it also means we're not incentivised to find whatever problem happens to match what we sell.</p>
+        </details>
+        <details>
+          <summary>What if we just want the ads managed?</summary>
+          <p class="faq-a">Then we're probably not right for you, and there are good specialists we can point you to. We only take on work where we can affect the whole journey — otherwise we can't be accountable for the result.</p>
+        </details>
+        <details>
+          <summary>Do we have to stop working with our current vendors?</summary>
+          <p class="faq-a">Not necessarily. Sometimes the answer is to keep a great freelancer and change what they're briefed on. The Teardown will tell you.</p>
+        </details>
+        <details>
+          <summary>Who actually does the work?</summary>
+          <p class="faq-a">A named senior lead, from the first call onward. You will not be handed to a junior account manager after the sale.</p>
+        </details>
+        <details>
+          <summary>How fast will we see results?</summary>
+          <p class="faq-a">The first 30 days are usually tracking and foundations, which feels slow and is the reason everything after it works. Meaningful movement typically shows in the second and third month. Anyone promising you a transformation in six weeks is selling you something.</p>
+        </details>
+        <details>
+          <summary>What if it doesn't work?</summary>
+          <p class="faq-a">The Teardown is guaranteed. The Sprint has agreed baselines, reported honestly at day 90. The retainer is rolling after six months with 30 days' notice. We've structured every step so you can stop — and so we have to keep earning it.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOK -->
+  <section class="sec book" id="book">
+    <div class="wrap">
+      <div class="col">
+        <p class="eyebrow">Start here</p>
+        <h2>The fastest growth in your business is already sitting in it.</h2>
+        <div class="stack-m" style="margin-bottom:32px">
+          <p class="lede">In the traffic you're already paying for. The customers who already bought once. The list you only email when there's a sale. The pages that get the visits and don't convert.</p>
+          <p class="lede">You don't need more. You need what you've already got, connected properly.</p>
+        </div>
+        <div class="hero-cta" style="margin-top:0">
+          <a class="btn" href="#book">Book a Growth Teardown →</a>
+          <p class="cta-note">30 minutes. We'll tell you what we'd look at, what it costs, and whether it's worth doing.</p>
+        </div>
+        <div class="buildnote">
+          <b>BUILD NOTE — remove before launch.</b><br>
+          Replace this block with your calendar embed (Cal.com / Calendly) and point every CTA at it.
+          Ask only five fields: name, email, store URL, monthly revenue band, monthly ad spend — enough to qualify before the call, few enough not to cost you the booking.<br><br>
+          <b>Unconfirmed on this draft:</b> all three prices are the recommended structure, not validated against your delivery cost or margin. Confirm before publishing. The Proof section deliberately carries no case studies, results or testimonials — add them only when you have documented, permissioned client data.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <p>Neon Mountain · eCommerce Growth Partner</p>
+    <p>Sales page draft v1</p>
+  </div>
+</footer>

@@ -1,0 +1,274 @@
+<title>Neon Mountain Start Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Newsreader:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#0B1017; --ground-2:#121A24; --ground-3:#18222E;
+  --ink:#E8EDF2; --ink-2:#9AA8B8; --ink-3:#66788C;
+  --rule:#1E2A38; --rule-strong:#2C3B4C;
+  --glow:#FFB03A; --glow-ink:#FFC163; --glow-soft:rgba(255,176,58,.13); --glow-line:rgba(255,176,58,.34);
+  --ice:#7FB3D5; --ice-soft:rgba(127,179,213,.10);
+  --crit:#FF6B57; --crit-soft:rgba(255,107,87,.12);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 32px -12px rgba(0,0,0,.6);
+  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+  --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+  --rule:#DDE4EB; --rule-strong:#C4CFD9;
+  --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.10); --glow-line:rgba(169,98,10,.32);
+  --ice:#2F6E96; --ice-soft:rgba(47,110,150,.08);
+  --crit:#C0341C; --crit-soft:rgba(192,52,28,.08);
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+}}
+:root[data-theme="light"]{
+  --ground:#F4F7F9; --ground-2:#FFFFFF; --ground-3:#EAEFF4;
+  --ink:#0C131B; --ink-2:#495A6C; --ink-3:#6D7E91;
+  --rule:#DDE4EB; --rule-strong:#C4CFD9;
+  --glow:#A9620A; --glow-ink:#8F520A; --glow-soft:rgba(169,98,10,.10); --glow-line:rgba(169,98,10,.32);
+  --ice:#2F6E96; --ice-soft:rgba(47,110,150,.08);
+  --crit:#C0341C; --crit-soft:rgba(192,52,28,.08);
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 12px 28px -14px rgba(16,32,48,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:800;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;margin:0}
+p{margin:0}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+.wrap{width:100%;max-width:960px;margin-inline:auto;padding-inline:24px}
+.col{max-width:64ch}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--glow);margin:0 0 16px}
+h2{font-size:clamp(25px,3.4vw,34px)}
+h3{font-size:clamp(18px,2.1vw,22px)}
+.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:24px 20px;border-bottom:1px solid var(--rule)}
+.mark{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:15px}
+.mast-meta{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:right;line-height:1.7}
+.hero{padding-block:clamp(36px,5vw,56px) 0}
+.hero h1{font-size:clamp(30px,5vw,50px);max-width:17ch;margin-bottom:18px}
+.lede{font-size:clamp(17px,1.9vw,20px);color:var(--ink-2);max-width:60ch}
+.sec{padding-block:clamp(40px,5vw,62px);border-top:1px solid var(--rule)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+.pitch{background:var(--ground-2);border:1px solid var(--glow-line);border-left:3px solid var(--glow);border-radius:3px;padding:26px 28px;margin-top:26px;max-width:72ch}
+.pitch .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--glow);margin-bottom:12px}
+.pitch h2{font-size:clamp(20px,2.5vw,26px);margin-bottom:12px}
+.pitch p{color:var(--ink-2);font-size:17px}
+
+/* phases */
+.phase{display:grid;grid-template-columns:132px 1fr;gap:28px;padding:28px 0;border-bottom:1px solid var(--rule)}
+.phase:first-of-type{border-top:1px solid var(--rule)}
+.when{font-family:var(--f-mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--glow);padding-top:5px;line-height:1.7}
+.when b{display:block;color:var(--ink-3);font-weight:400;margin-top:4px;letter-spacing:.06em}
+.phase h3{margin-bottom:6px}
+.goal{font-family:var(--f-mono);font-size:12px;color:var(--ice);letter-spacing:.03em;margin-bottom:14px}
+.phase ul{margin:0;padding-left:20px;color:var(--ink-2);font-size:16.5px;line-height:1.6}
+.phase li{margin-bottom:8px}
+.phase li strong{color:var(--ink);font-family:var(--f-display);font-weight:600}
+@media(max-width:680px){.phase{grid-template-columns:1fr;gap:10px}}
+
+/* evidence table */
+.ev{margin:24px 0;border:1px solid var(--rule);border-radius:3px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:13.5px}
+th,td{text-align:right;padding:11px 14px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:230px}
+thead th{background:var(--ground-3);font-weight:500;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+tbody tr:last-child td{border-bottom:0}
+td.bad{color:var(--crit)}
+td.good{color:var(--glow-ink)}
+
+/* money */
+.money{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:26px;border-top:1px solid var(--rule)}
+.money div{padding:20px 24px 22px 0;border-bottom:1px solid var(--rule)}
+.money dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.money dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:clamp(19px,2.2vw,24px);font-weight:500;letter-spacing:-.02em;color:var(--glow-ink)}
+.money small{display:block;font-family:var(--f-body);font-size:14.5px;color:var(--ink-2);margin-top:7px;letter-spacing:0;text-transform:none;line-height:1.5}
+
+/* stop list */
+.stop{background:var(--crit-soft);border:1px solid var(--rule);border-radius:3px;padding:24px 26px;margin-top:24px}
+.stop h3{font-size:19px;margin-bottom:14px;color:var(--crit)}
+.stop ul{margin:0;padding-left:19px;color:var(--ink-2);font-size:16.5px;line-height:1.6}
+.stop li{margin-bottom:9px}
+.stop li strong{color:var(--ink)}
+.note{background:var(--ice-soft);border:1px dashed var(--rule-strong);border-radius:3px;padding:24px 26px;margin-top:26px}
+.note h3{font-size:18px;margin-bottom:12px}
+.note ul{margin:0;padding-left:19px;color:var(--ink-2);font-size:16.5px;line-height:1.6}
+.note li{margin-bottom:8px}
+.foot{padding-block:30px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:space-between}
+.foot p{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3)}
+</style>
+
+<header class="wrap">
+  <div class="mast">
+    <span class="mark">
+      <svg width="20" height="20" viewBox="0 0 22 22" aria-hidden="true"><path d="M1 19 L8 5 L12 12 L14.5 8 L21 19 Z" fill="none" stroke="var(--glow)" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      Neon Mountain
+    </span>
+    <span class="mast-meta">Start Plan · 90 Days<br>Oct 2026</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Solo start · side income · then a team</p>
+    <h1>Three clients in 90 days. Then hire.</h1>
+    <p class="lede">You are the product right now, and that's fine — it's how every agency starts. The job for the next 90 days is narrow: prove you can sell it, deliver it once brilliantly, and find the ceiling where you need a second pair of hands.</p>
+    <div class="pitch">
+      <p class="k">What you sell, in one sentence</p>
+      <h2>I find the money leaking out of your eCommerce business, then I fix it.</h2>
+      <p>Not ads. Not websites. Not email. The diagnosis, then the repair — and the proof that it works is a $3.4M brand I run myself, where I found every one of the problems below.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">Your unfair advantage</p>
+    <h2>SHE STREET is a better case study because it went wrong.</h2>
+    <div class="col stack">
+      <p>Every agency leads with a win. You can lead with something far more credible: <strong>a real $3.4M brand, run by you, that was quietly bleeding — and a list of exactly what was broken, found in hours.</strong></p>
+      <p>Founders don't believe polished case studies. They believe someone who says "I made these mistakes in my own business, with my own money, and here's how I caught them."</p>
+    </div>
+
+    <div class="ev">
+      <table>
+        <thead><tr><th>What was broken at SHE STREET</th><th>The number</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue attributed to nothing at all (180 days)</td><td class="bad">$1,014,931 · 59%</td></tr>
+          <tr><td>Orders credited to email in six months, with 10 live flows</td><td class="bad">20</td></tr>
+          <tr><td>Bot sessions polluting a full month of reporting</td><td class="bad">87,867 @ 0.15%</td></tr>
+          <tr><td>Conversion rate, Aug 2025 → now</td><td class="bad">2.37% → 1.5%</td></tr>
+          <tr><td>Discount drift, costing per year</td><td class="bad">8.1% → 12.7% · ~$159k</td></tr>
+          <tr><td>Spent on prospecting at 1.72 ROAS</td><td class="bad">$8,715</td></tr>
+          <tr><td>Website retargeting audiences — actual size</td><td class="bad">20 people</td></tr>
+          <tr><td>Best campaign in the account — and it was switched off</td><td class="good">15.74 ROAS · $45,972</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col stack">
+      <p>That's your pitch, your content, and your sales call, all in one table. <strong>Write it up once this week.</strong> Call it what it is: <em>"What I found when I audited my own $3.4M brand."</em></p>
+      <p>And the ending matters — the business recovered and made its sales anyway. That's the honest, useful version: this stuff doesn't kill a brand, it quietly taxes it. Most founders are paying that tax right now and can't see it.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">The plan</p>
+    <h2>90 days, four moves.</h2>
+
+    <div class="phase">
+      <p class="when">Week 1–2<b>~10 hrs total</b></p>
+      <div>
+        <h3>Become sellable. Not polished — sellable.</h3>
+        <p class="goal">Done when: someone can find you, believe you, and book a call.</p>
+        <ul>
+          <li><strong>Write the SHE STREET teardown up</strong> as a one-page case study. The table above, plus what you'd do about each. Half a day.</li>
+          <li><strong>Put the sales page live</strong> — it's already built. Swap the placeholder proof for the case study and add a Cal.com link. One day.</li>
+          <li><strong>Set your prices and don't move them.</strong> $2,500 Teardown. $6,000/month retainer to start. Write them down.</li>
+          <li><strong>Set up the entity and a business bank account.</strong> Boring, one afternoon, blocks nothing later.</li>
+          <li><strong>Make a list of 20 people you already know</strong> who run or work at eCom brands. Names on paper.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <p class="when">Week 3–6<b>~8 hrs/week</b></p>
+      <div>
+        <h3>Ten free teardown videos. Your network first.</h3>
+        <p class="goal">Done when: 10 videos sent, 3+ calls booked.</p>
+        <ul>
+          <li><strong>Record a 5-minute screen teardown</strong> for ten brands off your list. Three specific things you'd fix. No pitch, no deck, no obligation.</li>
+          <li><strong>Start with the accounts you already touch</strong> — HE STREET, Easy Lift Georgia, Topp Group. Warm relationships convert first and fastest.</li>
+          <li><strong>End every video the same way:</strong> "If you want me to do this properly, with your actual account data, that's the Teardown. $2,500, one week."</li>
+          <li><strong>Post two of them publicly</strong> (permission first, or anonymised). This is your entire content strategy for now.</li>
+          <li><strong>Don't build a lead magnet. Don't build a funnel.</strong> Ten videos to ten real people beats both.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <p class="when">Week 7–10<b>~12 hrs/week</b></p>
+      <div>
+        <h3>Sell two Teardowns. Deliver them brilliantly.</h3>
+        <p class="goal">Done when: $5,000 collected and two findings sessions delivered.</p>
+        <ul>
+          <li><strong>Never quote before the Teardown.</strong> It's the whole differentiator and it's the thing no competitor does.</li>
+          <li><strong>Require ad account access and COGS up front.</strong> You learned this the hard way on your own audit — it was weaker without them.</li>
+          <li><strong>Over-deliver on the first two.</strong> These are your external case studies. Treat them as marketing spend, not margin.</li>
+          <li><strong>Ask for the quote at the findings session,</strong> while they're still looking at what you found. Not a month later.</li>
+          <li><strong>Pitch the retainer in the same meeting.</strong> "You can run this roadmap yourself, or I can run it. Both are fine. Which do you want to talk about?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <p class="when">Week 11–13<b>~15 hrs/week</b></p>
+      <div>
+        <h3>Convert one to a retainer. Find your ceiling.</h3>
+        <p class="goal">Done when: one retainer signed and you know your real capacity.</p>
+        <ul>
+          <li><strong>Convert at least one Teardown into a $6k/month retainer.</strong> One is enough. It proves the ladder works.</li>
+          <li><strong>Track your actual hours</strong> for the whole quarter, by task. You'll be wrong about where they go — everyone is.</li>
+          <li><strong>Write down what you did twice.</strong> Anything repeated is the first thing to templatise or hand over.</li>
+          <li><strong>Keep selling Teardowns while you deliver.</strong> The classic solo mistake is stopping sales to do the work, then starving a month later.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">The money</p>
+    <h2>What this is actually worth, solo.</h2>
+    <div class="col"><p>Rough capacity maths on 15 hours a week. Replace every number with your own once you've tracked a month.</p></div>
+    <dl class="money">
+      <div><dt>90-day target</dt><dd>~$11,000</dd><small>2 Teardowns at $2,500, plus one retainer month at $6,000.</small></div>
+      <div><dt>Month 6 run rate</dt><dd>~$14,000/mo</dd><small>2 retainers plus a Teardown. Realistic solo ceiling.</small></div>
+      <div><dt>Your solo limit</dt><dd>2 retainers</dd><small>~25 hrs each per month. A third breaks delivery quality.</small></div>
+      <div><dt>Hire trigger</dt><dd>Client #3</dd><small>When you're turning work away, or it's eating SHE STREET hours.</small></div>
+    </dl>
+    <div class="col" style="margin-top:26px">
+      <h3 style="margin-bottom:12px">Who to hire first</h3>
+      <p style="color:var(--ink-2)">Not a designer, and not an account manager. <strong>Hire the person who executes what you diagnose</strong> — a media buyer or a Shopify/Klaviyo implementer, contract first, part-time. You stay the diagnosis and the client relationship; they become the hands. That's the only split that works while you're still the one with the knowledge.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">Discipline</p>
+    <h2>What not to do.</h2>
+    <div class="stop">
+      <h3>Everything on this list will feel productive and will cost you the quarter</h3>
+      <ul>
+        <li><strong>Don't build the Growth Monitor yet.</strong> It's a good idea for month 9, not month 1. Clients first.</li>
+        <li><strong>Don't build a lead magnet, a nurture sequence, or a content calendar.</strong> Ten teardown videos to ten real people beats all of it.</li>
+        <li><strong>Don't redesign the brand.</strong> You're an art director; this will eat weeks and win you nothing.</li>
+        <li><strong>Don't do cold outreach yet.</strong> Your network is warmer and faster. Cold is for when warm runs out.</li>
+        <li><strong>Don't discount the first client to land them.</strong> It sets your price ceiling permanently.</li>
+        <li><strong>Don't take a client who won't give you data access.</strong> You cannot be accountable for what you cannot measure.</li>
+        <li><strong>Don't hire before client #3.</strong> Hiring into uncertain revenue is how solo agencies die.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="eyebrow">Straight talk</p>
+    <h2>What I'm assuming, and what I don't know.</h2>
+    <div class="note">
+      <h3>Check these before you commit</h3>
+      <ul>
+        <li><strong>The money figures are capacity maths, not forecasts.</strong> They assume 15 hrs/week, a $2,500 Teardown and a $6,000 retainer. I don't know your available hours or what you can charge in your market — track one month and replace them.</li>
+        <li><strong>I dropped the retainer to $6,000</strong> from the $6–10k band you picked earlier, because solo delivery is the constraint. Charge more if you can sell it; just know a $10k retainer solo is roughly 35–40 hours a month.</li>
+        <li><strong>I'm assuming your network has eCom brands in it.</strong> The whole Week 3–6 move depends on that. If the list of 20 is actually a list of 5, cold outreach moves forward and the timeline stretches.</li>
+        <li><strong>Publishing the SHE STREET numbers is your call.</strong> They're real and they're yours, but they're also candid about your own business. Anonymise if that's more comfortable — it loses some power and keeps most of it.</li>
+        <li><strong>Three clients in 90 days is a goal, not a prediction.</strong> I have no basis to tell you it's likely. It's achievable with the network advantage; it is not guaranteed.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <p>Neon Mountain · 90-Day Start Plan</p>
+    <p>Solo → 3 clients → first hire</p>
+  </div>
+</footer>
